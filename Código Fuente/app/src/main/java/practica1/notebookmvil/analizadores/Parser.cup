@@ -1,0 +1,44 @@
+package practica1.notebookmovil.analizadores;
+
+import java_cup.runtime.*;
+
+class Parser;
+
+action code {:
+    public void report_error(String message, Object info) {
+            if (info instanceof Symbol) {
+                Symbol s = (Symbol) info;
+                Lexer.errores.add(new ErrorReporte(String.valueOf(s.value), s.left+1, s.right+1, "Sintáctico", message));
+            } else {
+                System.out.println("Error sintáctico: " + message);
+            }
+        }
+
+        public void report_fatal_error(String message, Object info) throws Exception {
+            report_error(message, info);
+            throw new Exception("Error sintáctico irrecuperable.");
+        }
+:}
+
+terminal NUMERO, SUMA, RESTA, MULTIPLICACION, DIVISION, PARENTESIS_ABRE, PARENTESIS_CIERRA, NUMERAL, POTENCIA;
+
+non terminal inicial, operacion, header;
+
+precedence left SUMA, RESTA;
+precedence left MULTIPLICACION, DIVISION;
+precedence left POTENCIA;
+
+start with inicial;
+
+inicial ::= operacion;
+
+operacion ::= operacion:e1 SUMA operacion:e2
+                       | operacion:e1 RESTA operacion:e2
+                       | operacion:e1 MULTIPLICACION operacion:e2
+                       | operacion:e1 DIVISION operacion:e2
+                       | PARENTESIS_ABRE operacion:e PARENTESIS_CIERRA
+                       | NUMERO:n;
+
+//GRAMÁTICAS PARA MARKDOWN
+
+header ::= NUMERAL
