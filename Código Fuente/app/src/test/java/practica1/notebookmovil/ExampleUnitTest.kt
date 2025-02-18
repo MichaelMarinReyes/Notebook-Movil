@@ -1,4 +1,4 @@
-package practica1.notebookmvil
+package practica1.notebookmovil
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package practica1.notebookmvil
+package practica1.notebookmovil
 
 import android.content.Context
 import android.os.Bundle
@@ -7,13 +7,17 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import practica1.notebookmvil.ui.theme.NotebookMóvilTheme
+import practica1.notebookmovil.analizadores.Lexer
+import practica1.notebookmovil.analizadores.Parser
+import practica1.notebookmovil.ui.theme.NotebookMóvilTheme
+import java.io.StringReader
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,15 +32,19 @@ class MainActivity : ComponentActivity() {
         compilarBtn.setOnClickListener {
             val textoIngresado = entradaTexto.text.toString().trim()
             if (textoIngresado.isNotEmpty()) {
-                agregarExpresion(this, textoIngresado, contenedorResultados) // Pasar el contexto
+                agregarExpresion(this, textoIngresado, contenedorResultados)
+                entradaTexto.text.clear()
+            }
+            if (textoIngresado.isEmpty()) {
+                Toast.makeText(this, "Ingresa un texto en el campo indicado", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 }
 
-
 private fun agregarExpresion(context: Context, expresion: String, contenedorResultados: ViewGroup) {
-    val nuevaVista = LinearLayout(context).apply { // Usar "context" en vez de "this"
+    val nuevaVista = LinearLayout(context).apply {
         orientation = LinearLayout.VERTICAL
         layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -45,23 +53,38 @@ private fun agregarExpresion(context: Context, expresion: String, contenedorResu
         setPadding(8, 8, 8, 8)
     }
 
-    val textExpresion = TextView(context).apply {
-        text = "📝 $expresion"
+    val textExpression = TextView(context).apply {
+        text = "🔹 $expresion"
         textSize = 18f
     }
 
-    val textError = TextView(context).apply {
-        text = "❌ Error: '$expresion' no está definida"
-        textSize = 16f
-        setTextColor(context.getColor(android.R.color.holo_red_dark))
+    try {
+        val lexer = Lexer(StringReader(expresion))
+        val parser = Parser(lexer)
+        val resultado = parser.parse().value
+
+        val textResult = TextView(context).apply {
+            text = "✅ Resultado: $resultado"
+            textSize = 16f
+            setTextColor(context.getColor(android.R.color.holo_green_dark))
+        }
+
+        nuevaVista.addView(textExpression)
+        nuevaVista.addView(textResult)
+
+    } catch (e: Exception) {
+        val textError = TextView(context).apply {
+            text = "❌ Error: ${e.message}"
+            textSize = 16f
+            setTextColor(context.getColor(android.R.color.holo_red_dark))
+        }
+
+        nuevaVista.addView(textExpression)
+        nuevaVista.addView(textError)
     }
 
-    nuevaVista.addView(textExpresion)
-    nuevaVista.addView(textError)
-
-    contenedorResultados.addView(nuevaVista) // Agregar la vista generada
+    contenedorResultados.addView(nuevaVista)
 }
-
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {

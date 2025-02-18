@@ -1,4 +1,4 @@
-package practica1.notebookmvil.ui.theme
+package practica1.notebookmovil.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,0 +1,69 @@
+package practica1.notebookmovil.analizadores;
+
+import java_cup.runtime.*;
+import practica1.notebookmovil.analizadores.errores.ErrorSintactico;
+import java.util.ArrayList;
+
+class Parser;
+
+action code {:
+     public ArrayList<ErrorSintactico> errorSintactico = new ArrayList();
+     public Double resultado = 0.0;
+
+     public ArrayList<ErrorSintactico> getErrorSintactico() {
+         return errorSintactico;
+     }
+
+     public Double getResultado() {
+         return resultado;
+     }
+
+     public void report_error(String message, Object info) {
+         if (info instanceof Symbol) {
+             Symbol s = (Symbol) info;
+             int fila = s.left + 1;
+             int columna = s.right + 1;
+             String result = (s.value != null) ? String.valueOf(s.value) : " ";
+             errorSintactico.add(new ErrorSintactico("Sintáctico", fila, columna, result, "Se esperaba una operación"));
+         } else {
+             System.out.println("Error sintáctico: " + message);
+         }
+     }
+
+     public void report_fatal_error(String message, Object info) throws Exception {
+         report_error(message, info);
+         throw new Exception("Error sintáctico irrecuperable.");
+     }
+:}
+
+terminal CADENA, NUMERO, SUMA, RESTA, MULTIPLICACION, DIVISION, PARENTESIS_ABRE, PARENTESIS_CIERRA, NUMERAL, POTENCIA;
+
+non terminal inicial, operacion, header, textos;
+
+precedence left SUMA, RESTA;
+precedence left MULTIPLICACION, DIVISION;
+precedence left POTENCIA;
+
+start with inicial;
+
+inicial ::= operacion;
+
+operacion ::= operacion:e1 SUMA operacion:e2
+                       | operacion:e1 RESTA operacion:e2
+                       | operacion:e1 MULTIPLICACION operacion:e2
+                       | operacion:e1 DIVISION operacion:e2
+                       | PARENTESIS_ABRE operacion:e PARENTESIS_CIERRA
+                       | NUMERO:n;
+
+//GRAMÁTICAS PARA MARKDOWN
+
+header ::= NUMERAL CADENA
+        | NUMERAL NUMERAL CADENA
+        | NUMERAL NUMERAL NUMERAL CADENA;
+
+textos ::= MULTIPLICACION MULTIPLICACION CADENA MULTIPLICACION MULTIPLICACION
+        | MULTIPLICACION CADENA MULTIPLICACION
+        | MULTIPLICACION MULTIPLICACION MULTIPLICACION CADENA MULTIPLICACION MULTIPLICACION MULTIPLICACION
+        |  MULTIPLICACION MULTIPLICACION NUMERO MULTIPLICACION MULTIPLICACION
+        | MULTIPLICACION NUMERO MULTIPLICACION
+        | MULTIPLICACION MULTIPLICACION MULTIPLICACION NUMERO MULTIPLICACION MULTIPLICACION MULTIPLICACION;

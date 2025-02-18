@@ -1,6 +1,9 @@
-package practica1.notebookmvil.analizadores;
+package practica1.notebookmovil.analizadores;
 
+import java.util.ArrayList;
 import java_cup.runtime.*;
+import practica1.notebookmovil.analizadores.ErrorLexico;
+import practica1.notebookmovil.analizadores.Token;
 
 %%
 %public
@@ -10,13 +13,19 @@ import java_cup.runtime.*;
 %column
 %cup
 %ignorecase
-
+%{
+    public static ArrayList<ErrorLexico> errores = new ArrayList<>();
+    public static ArrayList<Token> tokens = new ArrayList<>();
+    public ArrayList<ErrorLexico> getErrores() {
+        return errores;
+    }
+%}
 
 %%
 
 [ \t\n\r\f]       { /* Ignorar espacios en blanco */ }
 
-[0-9a-zA-Z]       { return new Symbol(ParserSym.CADENA, yyline+1, yycolumn+1, yytext();++ }
+[0-9a-zA-Z]       { return new Symbol(ParserSym.CADENA, yyline+1, yycolumn+1, yytext()); }
 [0-9]+\.[0-9]+    { return new Symbol(ParserSym.NUMERO, Double.parseDouble(yytext())); }
 [0-9]+            { return new Symbol(ParserSym.NUMERO, Integer.parseInt(yytext())); }
 "+"               { return new Symbol(ParserSym.SUMA, yyline+1, yycolumn+1, yytext()); }

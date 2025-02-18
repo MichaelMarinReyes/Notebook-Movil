@@ -1,4 +1,4 @@
-package practica1.notebookmvil.ui.theme
+package practica1.notebookmovil.ui.theme
 
 import android.app.Activity
 import android.os.Build

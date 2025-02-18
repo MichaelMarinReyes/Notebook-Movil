@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "practica1.notebookmvil"
+    namespace = "practica1.notebookmovil"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "practica1.notebookmvil"
+        applicationId = "practica1.notebookmovil"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -47,6 +47,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    packagingOptions {
+        resources {
+            excludes += "META-INF/INDEX.LIST"
+        }
+    }
 }
 
 dependencies {
@@ -59,7 +65,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -67,4 +72,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation("de.jflex:jflex:1.9.1")
+    implementation("com.github.vbmacher:java-cup-runtime:11b-20160615-3")
 }
