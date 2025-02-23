@@ -101,9 +101,9 @@ public class Lexer implements java_cup.runtime.Scanner {
 
   private static final String ZZ_ACTION_PACKED_0 =
     "\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7"+
-    "\1\10\1\11\1\12\1\13\1\14\1\15\1\16\3\15"+
-    "\1\17\1\20\1\21\1\22\1\0\4\15\1\23\1\24"+
-    "\1\25\3\15\1\0\1\15\1\26\1\15\1\0\1\15"+
+    "\1\10\1\11\1\12\1\13\1\14\1\15\1\16\3\17"+
+    "\1\20\1\21\1\22\1\23\1\0\4\17\1\24\1\25"+
+    "\1\15\3\17\1\0\1\17\1\26\1\17\1\0\1\17"+
     "\2\27\1\30";
 
   private static int [] zzUnpackAction() {
@@ -803,7 +803,7 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 36: break;
           case 13:
-            { return new Symbol(ParserSym.CADENA, yyline+1, yycolumn+1, yytext());
+            { return new Symbol(ParserSym.NUMERO, yyline+1, yycolumn+1, Double.parseDouble(yytext()));
             }
           // fall through
           case 37: break;
@@ -813,37 +813,37 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 38: break;
           case 15:
-            { return new Symbol(ParserSym.POTENCIA, yyline+1, yycolumn+1, yytext());
+            { return new Symbol(ParserSym.CADENA, yyline+1, yycolumn+1, yytext());
             }
           // fall through
           case 39: break;
           case 16:
-            { return new Symbol(ParserSym.VARIABLE, yyline+1, yycolumn+1, yytext());
+            { return new Symbol(ParserSym.POTENCIA, yyline+1, yycolumn+1, yytext());
             }
           // fall through
           case 40: break;
           case 17:
-            { return new Symbol(ParserSym.HEADER2, yyline+1, yycolumn+1, yytext());
+            { return new Symbol(ParserSym.VARIABLE, yyline+1, yycolumn+1, yytext());
             }
           // fall through
           case 41: break;
           case 18:
-            { return new Symbol(ParserSym.TEXT_NEGRITA, yyline+1, yycolumn+1, yytext());
+            { return new Symbol(ParserSym.HEADER2, yyline+1, yycolumn+1, yytext());
             }
           // fall through
           case 42: break;
           case 19:
-            { return new Symbol(ParserSym.HEADER3, yyline+1, yycolumn+1, yytext());
+            { return new Symbol(ParserSym.TEXT_NEGRITA, yyline+1, yycolumn+1, yytext());
             }
           // fall through
           case 43: break;
           case 20:
-            { return new Symbol(ParserSym.TEXT_NEGRITA_ITALICA, yyline+1, yycolumn+1, yytext());
+            { return new Symbol(ParserSym.HEADER3, yyline+1, yycolumn+1, yytext());
             }
           // fall through
           case 44: break;
           case 21:
-            { return new Symbol(ParserSym.NUMERO, yyline+1, yycolumn+1, Double.parseDouble(yytext()));
+            { return new Symbol(ParserSym.TEXT_NEGRITA_ITALICA, yyline+1, yycolumn+1, yytext());
             }
           // fall through
           case 45: break;

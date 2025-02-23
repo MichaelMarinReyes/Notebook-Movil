@@ -28,7 +28,6 @@ import practica1.notebookmovil.analizadores.Token;
 "format"          { return new Symbol(ParserSym.FORMAT, yyline+1, yycolumn+1, yytext()); }
 "plot"            { return new Symbol(ParserSym.PLOT, yyline+1, yycolumn+1, yytext()); }
 "print"           { return new Symbol(ParserSym.PRINT, yyline+1, yycolumn+1, yytext()); }
-[0-9a-zA-Z]+      { return new Symbol(ParserSym.CADENA, yyline+1, yycolumn+1, yytext()); }
 [0-9]+\.[0-9]+    { return new Symbol(ParserSym.NUMERO, yyline+1, yycolumn+1, Double.parseDouble(yytext())); }
 [0-9]+            { return new Symbol(ParserSym.NUMERO, yyline+1, yycolumn+1, Double.parseDouble(yytext())); }
 "+"               { return new Symbol(ParserSym.SUMA, yyline+1, yycolumn+1, yytext()); }
@@ -47,6 +46,7 @@ import practica1.notebookmovil.analizadores.Token;
 \n                { return new Symbol(ParserSym.SALTO_LINEA, yyline+1, yycolumn+1, yytext()); }
 \"                { return new Symbol(ParserSym.COMILLAS, yyline+1, yycolumn+1, yytext()); }
 ","               { return new Symbol(ParserSym.COMA, yyline+1, yycolumn+1, yytext()); }
+[0-9a-zA-Z]+      { return new Symbol(ParserSym.CADENA, yyline+1, yycolumn+1, yytext()); }
 [a-zA-Z_][a-zA-Z0-9_]* { return new Symbol(ParserSym.VARIABLE, yyline+1, yycolumn+1, yytext()); }
 <<EOF>>           { return new Symbol(ParserSym.EOF); }
 [^]               { errores.add(new ErrorLexico(yytext(), yyline + 1, yycolumn + 1, "Léxico", "Caracter desconocido: " + yytext()));

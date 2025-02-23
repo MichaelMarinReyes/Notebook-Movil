@@ -66,9 +66,10 @@ private fun agregarExpresion(context: Context, expresion: String, contenedorResu
         Log.d("DEBUG", "Expresión recibida: $expresion")
         val parser = Parser(lexer)
         val resultado = parser.parse().value
+        val texto = parser.getTexto()
         Log.d("DEBUG", "Expresión del parser: $resultado")
         val textResult = TextView(context).apply {
-            text = "✅ Resultado: $resultado"
+            text = "✅ Resultado: $texto"
             textSize = 16f
             setTextColor(context.getColor(android.R.color.holo_green_dark))
         }
