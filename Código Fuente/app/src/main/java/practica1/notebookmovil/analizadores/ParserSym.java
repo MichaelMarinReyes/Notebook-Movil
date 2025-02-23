@@ -8,18 +8,30 @@ package practica1.notebookmovil.analizadores;
 /** CUP generated class containing symbol constants. */
 public class ParserSym {
   /* terminals */
-  public static final int CADENA = 2;
-  public static final int POTENCIA = 11;
-  public static final int SUMA = 4;
+  public static final int PLOT = 23;
   public static final int MULTIPLICACION = 6;
-  public static final int EOF = 0;
-  public static final int PARENTESIS_ABRE = 8;
-  public static final int NUMERO = 3;
-  public static final int NUMERAL = 10;
-  public static final int error = 1;
+  public static final int CADENA = 2;
+  public static final int IGUAL = 11;
   public static final int DIVISION = 7;
-  public static final int RESTA = 5;
+  public static final int SUMA = 4;
+  public static final int PARENTESIS_ABRE = 8;
+  public static final int TEXT_NEGRITA_ITALICA = 16;
+  public static final int POTENCIA = 10;
   public static final int PARENTESIS_CIERRA = 9;
+  public static final int VARIABLE = 20;
+  public static final int HEADER3 = 14;
+  public static final int COMILLAS = 18;
+  public static final int HEADER2 = 13;
+  public static final int HEADER1 = 12;
+  public static final int COMA = 19;
+  public static final int EOF = 0;
+  public static final int PRINT = 21;
+  public static final int error = 1;
+  public static final int NUMERO = 3;
+  public static final int SALTO_LINEA = 17;
+  public static final int FORMAT = 22;
+  public static final int TEXT_NEGRITA = 15;
+  public static final int RESTA = 5;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -31,8 +43,20 @@ public class ParserSym {
   "DIVISION",
   "PARENTESIS_ABRE",
   "PARENTESIS_CIERRA",
-  "NUMERAL",
-  "POTENCIA"
+  "POTENCIA",
+  "IGUAL",
+  "HEADER1",
+  "HEADER2",
+  "HEADER3",
+  "TEXT_NEGRITA",
+  "TEXT_NEGRITA_ITALICA",
+  "SALTO_LINEA",
+  "COMILLAS",
+  "COMA",
+  "VARIABLE",
+  "PRINT",
+  "FORMAT",
+  "PLOT"
   };
 }
 

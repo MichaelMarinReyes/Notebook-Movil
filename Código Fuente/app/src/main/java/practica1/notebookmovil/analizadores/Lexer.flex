@@ -23,19 +23,31 @@ import practica1.notebookmovil.analizadores.Token;
 
 %%
 
-[ \t\n\r\f]       { /* Ignorar espacios en blanco */ }
+[ \t\r\f]       { /* Ignorar espacios en blanco */ }
 
-[0-9a-zA-Z]       { return new Symbol(ParserSym.CADENA, yyline+1, yycolumn+1, yytext()); }
-[0-9]+\.[0-9]+    { return new Symbol(ParserSym.NUMERO, Double.parseDouble(yytext())); }
-[0-9]+            { return new Symbol(ParserSym.NUMERO, Integer.parseInt(yytext())); }
+"format"          { return new Symbol(ParserSym.FORMAT, yyline+1, yycolumn+1, yytext()); }
+"plot"            { return new Symbol(ParserSym.PLOT, yyline+1, yycolumn+1, yytext()); }
+"print"           { return new Symbol(ParserSym.PRINT, yyline+1, yycolumn+1, yytext()); }
+[0-9a-zA-Z]+      { return new Symbol(ParserSym.CADENA, yyline+1, yycolumn+1, yytext()); }
+[0-9]+\.[0-9]+    { return new Symbol(ParserSym.NUMERO, yyline+1, yycolumn+1, Double.parseDouble(yytext())); }
+[0-9]+            { return new Symbol(ParserSym.NUMERO, yyline+1, yycolumn+1, Double.parseDouble(yytext())); }
 "+"               { return new Symbol(ParserSym.SUMA, yyline+1, yycolumn+1, yytext()); }
 "-"               { return new Symbol(ParserSym.RESTA, yyline+1, yycolumn+1, yytext()); }
 "*"               { return new Symbol(ParserSym.MULTIPLICACION, yyline+1, yycolumn+1, yytext()); }
 "/"               { return new Symbol(ParserSym.DIVISION, yyline+1, yycolumn+1, yytext()); }
 "("               { return new Symbol(ParserSym.PARENTESIS_ABRE, yyline+1, yycolumn+1, yytext()); }
 ")"               { return new Symbol(ParserSym.PARENTESIS_CIERRA, yyline+1, yycolumn+1, yytext()); }
-"#"               { return new Symbol(ParserSym.NUMERAL, yyline+1, yycolumn+1, yytext()); }
 "^"               { return new Symbol(ParserSym.POTENCIA, yyline+1, yycolumn+1, yytext()); }
+"="               { return new Symbol(ParserSym.IGUAL, yyline+1, yycolumn+1, yytext()); }
+"#"               { return new Symbol(ParserSym.HEADER1, yyline+1, yycolumn+1, yytext()); }
+"##"              { return new Symbol(ParserSym.HEADER2, yyline+1, yycolumn+1, yytext()); }
+"###"             { return new Symbol(ParserSym.HEADER3, yyline+1, yycolumn+1, yytext()); }
+"**"              { return new Symbol(ParserSym.TEXT_NEGRITA, yyline+1, yycolumn+1, yytext()); }
+"***"             { return new Symbol(ParserSym.TEXT_NEGRITA_ITALICA, yyline+1, yycolumn+1, yytext()); }
+\n                { return new Symbol(ParserSym.SALTO_LINEA, yyline+1, yycolumn+1, yytext()); }
+\"                { return new Symbol(ParserSym.COMILLAS, yyline+1, yycolumn+1, yytext()); }
+","               { return new Symbol(ParserSym.COMA, yyline+1, yycolumn+1, yytext()); }
+[a-zA-Z_][a-zA-Z0-9_]* { return new Symbol(ParserSym.VARIABLE, yyline+1, yycolumn+1, yytext()); }
 <<EOF>>           { return new Symbol(ParserSym.EOF); }
 [^]               { errores.add(new ErrorLexico(yytext(), yyline + 1, yycolumn + 1, "Léxico", "Caracter desconocido: " + yytext()));
           System.err.println("Error léxico: " + yytext() + " linea: " + String.valueOf(yyline + 1) + " columna: " + String.valueOf(yycolumn + 1));}

@@ -1,69 +1,90 @@
 package practica1.notebookmovil.analizadores;
 
 import java_cup.runtime.*;
-import practica1.notebookmovil.analizadores.errores.ErrorSintactico;
 import java.util.ArrayList;
 
-class Parser;
+parser code {:
+    public Double resultado = 0.0;
 
-action code {:
-     public ArrayList<ErrorSintactico> errorSintactico = new ArrayList();
-     public Double resultado = 0.0;
+    public Double getResultado() {
+        return resultado;
+    }
 
-     public ArrayList<ErrorSintactico> getErrorSintactico() {
-         return errorSintactico;
-     }
+    public void report_error(String message, Object info) {
+        if (info instanceof Symbol) {
+            Symbol s = (Symbol) info;
+            System.err.println("Error sintáctico en línea " + (s.left + 1) + ", columna " + (s.right + 1) + ": " + message);
+        } else {
+            System.err.println("Error sintáctico: " + message);
+        }
+    }
 
-     public Double getResultado() {
-         return resultado;
-     }
-
-     public void report_error(String message, Object info) {
-         if (info instanceof Symbol) {
-             Symbol s = (Symbol) info;
-             int fila = s.left + 1;
-             int columna = s.right + 1;
-             String result = (s.value != null) ? String.valueOf(s.value) : " ";
-             errorSintactico.add(new ErrorSintactico("Sintáctico", fila, columna, result, "Se esperaba una operación"));
-         } else {
-             System.out.println("Error sintáctico: " + message);
-         }
-     }
-
-     public void report_fatal_error(String message, Object info) throws Exception {
-         report_error(message, info);
-         throw new Exception("Error sintáctico irrecuperable.");
-     }
+    public void report_fatal_error(String message, Object info) throws Exception {
+        report_error(message, info);
+        throw new Exception("Error sintáctico irrecuperable.");
+    }
 :}
 
-terminal CADENA, NUMERO, SUMA, RESTA, MULTIPLICACION, DIVISION, PARENTESIS_ABRE, PARENTESIS_CIERRA, NUMERAL, POTENCIA;
+terminal CADENA, NUMERO, SUMA, RESTA, MULTIPLICACION, DIVISION, PARENTESIS_ABRE, PARENTESIS_CIERRA, POTENCIA, IGUAL;
+terminal HEADER1, HEADER2, HEADER3, TEXT_NEGRITA, TEXT_NEGRITA_ITALICA, SALTO_LINEA, COMILLAS, COMA, VARIABLE, PRINT, FORMAT, PLOT;
 
-non terminal inicial, operacion, header, textos;
+non terminal inicial, operacion, header, textos, parrafos, variables, impresion, format, ploteo;
 
 precedence left SUMA, RESTA;
 precedence left MULTIPLICACION, DIVISION;
 precedence left POTENCIA;
+precedence left NUMERO;
 
 start with inicial;
 
-inicial ::= operacion;
+inicial ::= operacion:res {:  /*  if (res != null) {
+                                    resultado = (Double) res;
+                                } else {
+                                    report_error("Expresión inválida", null);
+                                    resultado = 0.0;
+                                }*/ :}
+            | header
+            | textos
+            | parrafos
+            | variables
+            | impresion:impresion {: System.out.print(impresion); :}
+            | format
+            | ploteo;
 
-operacion ::= operacion:e1 SUMA operacion:e2
-                       | operacion:e1 RESTA operacion:e2
-                       | operacion:e1 MULTIPLICACION operacion:e2
-                       | operacion:e1 DIVISION operacion:e2
-                       | PARENTESIS_ABRE operacion:e PARENTESIS_CIERRA
-                       | NUMERO:n;
+operacion ::= operacion:e1 SUMA operacion:e2                  {: RESULT = ((Number)e1).doubleValue() + ((Number)e2).doubleValue(); :}
+            | operacion:e1 RESTA operacion:e2                 {: RESULT = ((Number)e1).doubleValue() - ((Number)e2).doubleValue(); :}
+            | operacion:e1 MULTIPLICACION operacion:e2        {: RESULT = ((Number)e1).doubleValue() * ((Number)e2).doubleValue(); :}
+            | operacion:e1 DIVISION operacion:e2              {: if (((Number)e2).doubleValue() == 0) {
+                                                                        throw new ArithmeticException("División por cero");
+                                                                 }
+                                                                 RESULT = ((Number)e1).doubleValue() / ((Number)e2).doubleValue(); :}
+            | operacion:e1 POTENCIA operacion:e2              {: RESULT = Math.pow(((Number)e1).doubleValue(), ((Number)e2).doubleValue()); :}
+            | PARENTESIS_ABRE operacion:e PARENTESIS_CIERRA   {: RESULT = ((Number)e).doubleValue(); :}
+            | NUMERO:n                                        {: RESULT = ((Number)n).doubleValue(); :}
+            | error:err                                       {: report_error("Error al ingresar", err); :};
 
-//GRAMÁTICAS PARA MARKDOWN
 
-header ::= NUMERAL CADENA
-        | NUMERAL NUMERAL CADENA
-        | NUMERAL NUMERAL NUMERAL CADENA;
+// Mantiene las gramáticas para Markdown y Python
+header ::= HEADER1 CADENA
+        | HEADER2 CADENA
+        | HEADER3 CADENA;
 
-textos ::= MULTIPLICACION MULTIPLICACION CADENA MULTIPLICACION MULTIPLICACION
-        | MULTIPLICACION CADENA MULTIPLICACION
-        | MULTIPLICACION MULTIPLICACION MULTIPLICACION CADENA MULTIPLICACION MULTIPLICACION MULTIPLICACION
-        |  MULTIPLICACION MULTIPLICACION NUMERO MULTIPLICACION MULTIPLICACION
-        | MULTIPLICACION NUMERO MULTIPLICACION
-        | MULTIPLICACION MULTIPLICACION MULTIPLICACION NUMERO MULTIPLICACION MULTIPLICACION MULTIPLICACION;
+textos ::= MULTIPLICACION CADENA MULTIPLICACION
+        | TEXT_NEGRITA CADENA TEXT_NEGRITA
+        | TEXT_NEGRITA_ITALICA CADENA TEXT_NEGRITA_ITALICA;
+
+parrafos ::= CADENA SALTO_LINEA
+        | CADENA SALTO_LINEA parrafos;
+
+variables ::= VARIABLE IGUAL operacion
+           | VARIABLE IGUAL operacion SUMA variables
+           | VARIABLE;
+
+impresion ::= PRINT PARENTESIS_ABRE COMILLAS CADENA:cad COMILLAS PARENTESIS_CIERRA {:System.out.println("ANTES DEL RESULT " + cad); RESULT = cad; :}
+           | PRINT PARENTESIS_ABRE variables:var PARENTESIS_CIERRA {: RESULT = var; :}
+           | PRINT PARENTESIS_ABRE operacion:op PARENTESIS_CIERRA {: RESULT = op.toString(); :}
+           | PRINT PARENTESIS_ABRE NUMERO:num PARENTESIS_CIERRA {: RESULT = String.valueOf(num); :};
+
+format ::= FORMAT PARENTESIS_ABRE operacion PARENTESIS_CIERRA;
+
+ploteo ::= PLOT PARENTESIS_ABRE operacion COMA NUMERO COMA NUMERO PARENTESIS_CIERRA;

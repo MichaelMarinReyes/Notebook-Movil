@@ -1,7 +1,9 @@
 package practica1.notebookmovil
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
@@ -18,6 +20,7 @@ import practica1.notebookmovil.analizadores.Lexer
 import practica1.notebookmovil.analizadores.Parser
 import practica1.notebookmovil.ui.theme.NotebookMóvilTheme
 import java.io.StringReader
+import kotlin.math.log
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,9 +63,10 @@ private fun agregarExpresion(context: Context, expresion: String, contenedorResu
 
     try {
         val lexer = Lexer(StringReader(expresion))
+        Log.d("DEBUG", "Expresión recibida: $expresion")
         val parser = Parser(lexer)
         val resultado = parser.parse().value
-
+        Log.d("DEBUG", "Expresión del parser: $resultado")
         val textResult = TextView(context).apply {
             text = "✅ Resultado: $resultado"
             textSize = 16f
