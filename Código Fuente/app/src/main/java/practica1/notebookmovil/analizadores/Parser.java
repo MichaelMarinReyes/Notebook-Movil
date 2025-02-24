@@ -37,8 +37,8 @@ public class Parser extends java_cup.runtime.lr_parser {
     "\000\002\002\003\000\002\002\003\000\002\002\003\000" +
     "\002\003\005\000\002\003\005\000\002\003\005\000\002" +
     "\003\005\000\002\003\005\000\002\003\005\000\002\003" +
-    "\003\000\002\003\003\000\002\010\010\000\002\010\010" +
-    "\000\002\010\006\000\002\010\006\000\002\010\006\000" +
+    "\003\000\002\003\003\000\002\010\010\000\002\010\006" +
+    "\000\002\010\006\000\002\010\006\000\002\010\010\000" +
     "\002\004\004\000\002\004\004\000\002\004\004\000\002" +
     "\005\005\000\002\005\005\000\002\005\005\000\002\006" +
     "\004\000\002\006\005\000\002\007\005\000\002\007\007" +
@@ -86,12 +86,12 @@ public class Parser extends java_cup.runtime.lr_parser {
     "\ufff2\007\ufff2\010\ufff2\011\ufff2\013\ufff2\014\ufff2\001\002" +
     "\000\004\004\062\001\002\000\016\006\036\007\034\010" +
     "\033\011\037\013\060\014\035\001\002\000\004\013\057" +
-    "\001\002\000\004\002\uffee\001\002\000\004\002\uffed\001" +
+    "\001\002\000\004\002\uffef\001\002\000\004\002\uffee\001" +
     "\002\000\004\024\067\001\002\000\006\023\064\024\063" +
     "\001\002\000\004\013\066\001\002\000\010\002\uffe5\004" +
     "\007\024\uffe5\001\002\000\006\002\uffe4\024\uffe4\001\002" +
-    "\000\004\002\ufff0\001\002\000\004\013\070\001\002\000" +
-    "\004\002\uffef\001\002\000\004\002\uffec\001\002\000\004" +
+    "\000\004\002\uffec\001\002\000\004\013\070\001\002\000" +
+    "\004\002\ufff0\001\002\000\004\002\uffed\001\002\000\004" +
     "\002\001\001\002\000\004\002\uffeb\001\002\000\004\002" +
     "\uffea\001\002\000\004\002\uffe9\001\002\000\010\003\023" +
     "\005\024\012\010\001\002\000\020\002\uffe3\006\100\007" +
@@ -454,19 +454,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 17: // impresion ::= PRINT PARENTESIS_ABRE COMILLAS CADENA COMILLAS PARENTESIS_CIERRA 
-            {
-              Object RESULT =null;
-		int cadleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).left;
-		int cadright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).right;
-		Object cad = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
-		 RESULT = cad; 
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("impresion",6, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-5)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
-            }
-          return CUP$Parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 18: // impresion ::= PRINT PARENTESIS_ABRE COMILLAS parrafos COMILLAS PARENTESIS_CIERRA 
+          case 17: // impresion ::= PRINT PARENTESIS_ABRE COMILLAS parrafos COMILLAS PARENTESIS_CIERRA 
             {
               Object RESULT =null;
 		int parrleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).left;
@@ -478,7 +466,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 19: // impresion ::= PRINT PARENTESIS_ABRE variables PARENTESIS_CIERRA 
+          case 18: // impresion ::= PRINT PARENTESIS_ABRE variables PARENTESIS_CIERRA 
             {
               Object RESULT =null;
 		int varleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
@@ -490,7 +478,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 20: // impresion ::= PRINT PARENTESIS_ABRE operacion PARENTESIS_CIERRA 
+          case 19: // impresion ::= PRINT PARENTESIS_ABRE operacion PARENTESIS_CIERRA 
             {
               Object RESULT =null;
 		int opleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
@@ -502,7 +490,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 21: // impresion ::= PRINT PARENTESIS_ABRE NUMERO PARENTESIS_CIERRA 
+          case 20: // impresion ::= PRINT PARENTESIS_ABRE NUMERO PARENTESIS_CIERRA 
             {
               Object RESULT =null;
 		int numleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
@@ -514,10 +502,25 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
+          case 21: // impresion ::= PRINT PARENTESIS_ABRE COMILLAS CADENA COMILLAS PARENTESIS_CIERRA 
+            {
+              Object RESULT =null;
+		int cadleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).left;
+		int cadright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).right;
+		Object cad = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		 RESULT = cad; 
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("impresion",6, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-5)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
           case 22: // header ::= HEADER1 CADENA 
             {
               Object RESULT =null;
-
+		int headleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int headright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		Object head = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		 System.out.println(head); RESULT = head; 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("header",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -526,7 +529,10 @@ class CUP$Parser$actions {
           case 23: // header ::= HEADER2 CADENA 
             {
               Object RESULT =null;
-
+		int headleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int headright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		Object head = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		 System.out.println(head); RESULT = head; 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("header",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -535,7 +541,10 @@ class CUP$Parser$actions {
           case 24: // header ::= HEADER3 CADENA 
             {
               Object RESULT =null;
-
+		int headleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int headright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		Object head = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		 System.out.println(head); RESULT = head; 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("header",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

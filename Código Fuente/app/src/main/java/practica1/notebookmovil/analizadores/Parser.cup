@@ -63,28 +63,28 @@ operacion ::= operacion:e1 SUMA operacion:e2                  {: RESULT = ((Numb
             | error:err                                       {: report_error("Error al ingresar", err); RESULT = 0.0; :};
 
 
-impresion ::= PRINT PARENTESIS_ABRE COMILLAS CADENA:cad COMILLAS PARENTESIS_CIERRA          {: RESULT = cad; :}
-           | PRINT PARENTESIS_ABRE COMILLAS parrafos:parr COMILLAS PARENTESIS_CIERRA        {: RESULT = parr; :}
-           | PRINT PARENTESIS_ABRE variables:var PARENTESIS_CIERRA                          {: RESULT = var; :}
-           | PRINT PARENTESIS_ABRE operacion:op PARENTESIS_CIERRA                           {: RESULT = op.toString(); :}
-           | PRINT PARENTESIS_ABRE NUMERO:num PARENTESIS_CIERRA                             {: RESULT = String.valueOf(num); :};
+impresion ::= PRINT PARENTESIS_ABRE COMILLAS parrafos:parr COMILLAS PARENTESIS_CIERRA        {: RESULT = parr; :}
+            | PRINT PARENTESIS_ABRE variables:var PARENTESIS_CIERRA                          {: RESULT = var; :}
+            | PRINT PARENTESIS_ABRE operacion:op PARENTESIS_CIERRA                           {: RESULT = op.toString(); :}
+            | PRINT PARENTESIS_ABRE NUMERO:num PARENTESIS_CIERRA                             {: RESULT = String.valueOf(num); :}
+            | PRINT PARENTESIS_ABRE COMILLAS CADENA:cad COMILLAS PARENTESIS_CIERRA           {: RESULT = cad; :};
 
 
 //GRAMÁTICAS PARA MARKDOWN
-header ::= HEADER1 CADENA
-        | HEADER2 CADENA
-        | HEADER3 CADENA;
+header ::= HEADER1 CADENA:head {: System.out.println(head); RESULT = head; :}
+         | HEADER2 CADENA:head {: System.out.println(head); RESULT = head; :}
+         | HEADER3 CADENA:head {: System.out.println(head); RESULT = head; :};
 
 textos ::= MULTIPLICACION CADENA MULTIPLICACION
-        | TEXT_NEGRITA CADENA TEXT_NEGRITA
-        | TEXT_NEGRITA_ITALICA CADENA TEXT_NEGRITA_ITALICA;
+         | TEXT_NEGRITA CADENA TEXT_NEGRITA
+         | TEXT_NEGRITA_ITALICA CADENA TEXT_NEGRITA_ITALICA;
 
 parrafos ::= CADENA SALTO_LINEA
-        | CADENA SALTO_LINEA parrafos;
+           | CADENA SALTO_LINEA parrafos;
 
 variables ::= VARIABLE IGUAL operacion
-           | VARIABLE IGUAL operacion SUMA variables
-           | VARIABLE;
+            | VARIABLE IGUAL operacion SUMA variables
+            | VARIABLE;
 
 format ::= FORMAT PARENTESIS_ABRE operacion PARENTESIS_CIERRA;
 
