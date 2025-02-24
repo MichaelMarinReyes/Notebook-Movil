@@ -4,12 +4,6 @@ import java_cup.runtime.*;
 import java.util.ArrayList;
 
 parser code {:
-    public Double resultado = 0.0;
-
-    public Double getResultado() {
-        return resultado;
-    }
-
     public String texto = " ";
 
     public String getTexto() {
@@ -31,7 +25,6 @@ parser code {:
     }
 
     public void guardarValoresNumericos(Double valor) {
-        System.out.println("entrando en funcion: " + valor);
         texto = String.valueOf(valor);
     }
 :}
@@ -48,24 +41,33 @@ precedence left NUMERO;
 
 start with inicial;
 
-inicial ::= operacion:res {:    if (res != null) {
-                                    resultado = (Double) res;
-                                } else {
-                                    report_error("Expresión inválida", null);
-                                    resultado = 0.0;
-                                }:}
-            | header
-            | textos
-            | parrafos
-            | variables
-            | impresion:impresion
-            | format
-            | ploteo;
+inicial ::= operacion:op        {: System.out.println("en producion inicial: " + op); texto = String.valueOf(op); :}
+            | header:hed        {: texto = String.valueOf(hed); :}
+            | textos:txt        {: texto = String.valueOf(txt); :}
+            | parrafos:parr     {: texto = String.valueOf(parr); :}
+            | variables: var    {: texto = String.valueOf(var); :}
+            | impresion:imp     {: texto = String.valueOf(imp); :}
+            | format:form       {: texto = String.valueOf(form); :}
+            | ploteo:plot       {: texto = String.valueOf(plot); :};
 
-impresion ::= PRINT PARENTESIS_ABRE COMILLAS CADENA:cad COMILLAS PARENTESIS_CIERRA {: texto = String.valueOf(cad); RESULT = cad; :}
-           | PRINT PARENTESIS_ABRE variables:var PARENTESIS_CIERRA {: texto = String.valueOf(var); RESULT = var; :}
-           | PRINT PARENTESIS_ABRE operacion:op PARENTESIS_CIERRA {: texto = String.valueOf(op); RESULT = op.toString(); :}
-           | PRINT PARENTESIS_ABRE NUMERO:num PARENTESIS_CIERRA {: texto = String.valueOf(num); RESULT = String.valueOf(num); :};
+operacion ::= operacion:e1 SUMA operacion:e2                  {: RESULT = ((Number)e1).doubleValue() + ((Number)e2).doubleValue(); :}
+            | operacion:e1 RESTA operacion:e2                 {: RESULT = ((Number)e1).doubleValue() - ((Number)e2).doubleValue(); :}
+            | operacion:e1 MULTIPLICACION operacion:e2        {: RESULT = ((Number)e1).doubleValue() * ((Number)e2).doubleValue(); :}
+            | operacion:e1 DIVISION operacion:e2              {: if (((Number)e2).doubleValue() == 0) {
+                                                                        throw new ArithmeticException("División por cero");
+                                                                 }
+                                                                 RESULT = ((Number)e1).doubleValue() / ((Number)e2).doubleValue(); :}
+            | operacion:e1 POTENCIA operacion:e2              {: RESULT = Math.pow(((Number)e1).doubleValue(), ((Number)e2).doubleValue()); :}
+            | PARENTESIS_ABRE operacion:e PARENTESIS_CIERRA   {: RESULT = ((Number)e).doubleValue(); :}
+            | NUMERO:n                                        {: RESULT = ((Number)n).doubleValue(); :}
+            | error:err                                       {: report_error("Error al ingresar", err); RESULT = 0.0; :};
+
+
+impresion ::= PRINT PARENTESIS_ABRE COMILLAS CADENA:cad COMILLAS PARENTESIS_CIERRA          {: RESULT = cad; :}
+           | PRINT PARENTESIS_ABRE COMILLAS parrafos:parr COMILLAS PARENTESIS_CIERRA        {: RESULT = parr; :}
+           | PRINT PARENTESIS_ABRE variables:var PARENTESIS_CIERRA                          {: RESULT = var; :}
+           | PRINT PARENTESIS_ABRE operacion:op PARENTESIS_CIERRA                           {: RESULT = op.toString(); :}
+           | PRINT PARENTESIS_ABRE NUMERO:num PARENTESIS_CIERRA                             {: RESULT = String.valueOf(num); :};
 
 
 //GRAMÁTICAS PARA MARKDOWN
@@ -87,15 +89,3 @@ variables ::= VARIABLE IGUAL operacion
 format ::= FORMAT PARENTESIS_ABRE operacion PARENTESIS_CIERRA;
 
 ploteo ::= PLOT PARENTESIS_ABRE operacion COMA NUMERO COMA NUMERO PARENTESIS_CIERRA;
-
-operacion ::= operacion:e1 SUMA operacion:e2                  {: guardarValoresNumericos(((Number)e1).doubleValue() + ((Number)e2).doubleValue()); System.out.println(RESULT = ((Number)e1).doubleValue() + ((Number)e2).doubleValue()); RESULT = ((Number)e1).doubleValue() + ((Number)e2).doubleValue(); :}
-            | operacion:e1 RESTA operacion:e2                 {: guardarValoresNumericos(((Number)e1).doubleValue() - ((Number)e2).doubleValue()); RESULT = ((Number)e1).doubleValue() - ((Number)e2).doubleValue(); :}
-            | operacion:e1 MULTIPLICACION operacion:e2        {: guardarValoresNumericos(((Number)e1).doubleValue() * ((Number)e2).doubleValue()); RESULT = ((Number)e1).doubleValue() * ((Number)e2).doubleValue(); :}
-            | operacion:e1 DIVISION operacion:e2              {: if (((Number)e2).doubleValue() == 0) {
-                                                                        throw new ArithmeticException("División por cero");
-                                                                 }
-                                                                 guardarValoresNumericos(((Number)e1).doubleValue() / ((Number)e2).doubleValue()); RESULT = ((Number)e1).doubleValue() / ((Number)e2).doubleValue(); :}
-            | operacion:e1 POTENCIA operacion:e2              {: guardarValoresNumericos(Math.pow(((Number)e1).doubleValue(), ((Number)e2).doubleValue())); RESULT = Math.pow(((Number)e1).doubleValue(), ((Number)e2).doubleValue()); :}
-            | PARENTESIS_ABRE operacion:e PARENTESIS_CIERRA   {: guardarValoresNumericos(((Number)e).doubleValue()); RESULT = ((Number)e).doubleValue(); :}
-            | NUMERO:n                                        {: guardarValoresNumericos(((Number)n).doubleValue()); RESULT = ((Number)n).doubleValue(); :}
-            | error:err                                       {: report_error("Error al ingresar", err); RESULT = 0.0; :};

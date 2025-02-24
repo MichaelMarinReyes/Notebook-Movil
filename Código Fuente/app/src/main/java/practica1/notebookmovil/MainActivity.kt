@@ -1,6 +1,5 @@
 package practica1.notebookmovil
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -20,7 +19,6 @@ import practica1.notebookmovil.analizadores.Lexer
 import practica1.notebookmovil.analizadores.Parser
 import practica1.notebookmovil.ui.theme.NotebookMóvilTheme
 import java.io.StringReader
-import kotlin.math.log
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +44,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private fun agregarExpresion(context: Context, expresion: String, contenedorResultados: ViewGroup) {
+private fun agregarExpresion(context: Context, textoIngresado: String, contenedorResultados: ViewGroup) {
     val nuevaVista = LinearLayout(context).apply {
         orientation = LinearLayout.VERTICAL
         layoutParams = LinearLayout.LayoutParams(
@@ -57,19 +55,18 @@ private fun agregarExpresion(context: Context, expresion: String, contenedorResu
     }
 
     val textExpression = TextView(context).apply {
-        text = "🔹 $expresion"
+        text = "🔹 $textoIngresado"
         textSize = 18f
     }
 
     try {
-        val lexer = Lexer(StringReader(expresion))
-        Log.d("DEBUG", "Expresión recibida: $expresion")
-        val parser = Parser(lexer)
-        val resultado = parser.parse().value
-        val texto = parser.getTexto()
-        Log.d("DEBUG", "Expresión del parser: $resultado")
+        val lexer: Lexer = Lexer(StringReader(textoIngresado))
+        val parser: Parser = Parser(lexer)
+        parser.parse()
+        Log.d("DEBUG", "Fin de parseo")
+
         val textResult = TextView(context).apply {
-            text = "✅ Resultado: $texto"
+            text = "✅ Resultado: ${parser.getTexto()}"
             textSize = 16f
             setTextColor(context.getColor(android.R.color.holo_green_dark))
         }
