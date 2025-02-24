@@ -23,7 +23,7 @@ import practica1.notebookmovil.analizadores.Token;
 
 %%
 
-[ \t\r\f]       { /* Ignorar espacios en blanco */ }
+[ \t\n\r\f]       { /* Ignorar espacios en blanco */ }
 
 "format"          { return new Symbol(ParserSym.FORMAT, yyline+1, yycolumn+1, yytext()); }
 "plot"            { return new Symbol(ParserSym.PLOT, yyline+1, yycolumn+1, yytext()); }
@@ -43,7 +43,6 @@ import practica1.notebookmovil.analizadores.Token;
 "###"             { return new Symbol(ParserSym.HEADER3, yyline+1, yycolumn+1, yytext()); }
 "**"              { return new Symbol(ParserSym.TEXT_NEGRITA, yyline+1, yycolumn+1, yytext()); }
 "***"             { return new Symbol(ParserSym.TEXT_NEGRITA_ITALICA, yyline+1, yycolumn+1, yytext()); }
-\n                { return new Symbol(ParserSym.SALTO_LINEA, yyline+1, yycolumn+1, yytext()); }
 \"                { return new Symbol(ParserSym.COMILLAS, yyline+1, yycolumn+1, yytext()); }
 ","               { return new Symbol(ParserSym.COMA, yyline+1, yycolumn+1, yytext()); }
 [0-9a-zA-Z]+      { return new Symbol(ParserSym.CADENA, yyline+1, yycolumn+1, yytext()); }

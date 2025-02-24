@@ -23,10 +23,6 @@ parser code {:
         report_error(message, info);
         throw new Exception("Error sintáctico irrecuperable.");
     }
-
-    public void guardarValoresNumericos(Double valor) {
-        texto = String.valueOf(valor);
-    }
 :}
 
 terminal CADENA, NUMERO, SUMA, RESTA, MULTIPLICACION, DIVISION, PARENTESIS_ABRE, PARENTESIS_CIERRA, POTENCIA, IGUAL;
@@ -38,10 +34,11 @@ precedence left SUMA, RESTA;
 precedence left MULTIPLICACION, DIVISION;
 precedence left POTENCIA;
 precedence left NUMERO;
+precedence left CADENA;
 
 start with inicial;
 
-inicial ::= operacion:op        {: System.out.println("en producion inicial: " + op); texto = String.valueOf(op); :}
+inicial ::= operacion:op        {: texto = String.valueOf(op); :}
             | header:hed        {: texto = String.valueOf(hed); :}
             | textos:txt        {: texto = String.valueOf(txt); :}
             | parrafos:parr     {: texto = String.valueOf(parr); :}
@@ -59,8 +56,8 @@ operacion ::= operacion:e1 SUMA operacion:e2                  {: RESULT = ((Numb
                                                                  RESULT = ((Number)e1).doubleValue() / ((Number)e2).doubleValue(); :}
             | operacion:e1 POTENCIA operacion:e2              {: RESULT = Math.pow(((Number)e1).doubleValue(), ((Number)e2).doubleValue()); :}
             | PARENTESIS_ABRE operacion:e PARENTESIS_CIERRA   {: RESULT = ((Number)e).doubleValue(); :}
-            | NUMERO:n                                        {: RESULT = ((Number)n).doubleValue(); :}
-            | error:err                                       {: report_error("Error al ingresar", err); RESULT = 0.0; :};
+            | NUMERO:n                                        {: RESULT = ((Number)n).doubleValue(); :}/**
+            | error:err                                       {: report_error("Error al ingresar", err); RESULT = 0.0; :}*/;
 
 
 impresion ::= PRINT PARENTESIS_ABRE COMILLAS parrafos:parr COMILLAS PARENTESIS_CIERRA        {: RESULT = parr; :}
@@ -79,8 +76,8 @@ textos ::= MULTIPLICACION CADENA MULTIPLICACION
          | TEXT_NEGRITA CADENA TEXT_NEGRITA
          | TEXT_NEGRITA_ITALICA CADENA TEXT_NEGRITA_ITALICA;
 
-parrafos ::= CADENA SALTO_LINEA
-           | CADENA SALTO_LINEA parrafos;
+parrafos ::= CADENA: cad                                        {: RESULT = cad; :}
+           | parrafos:parr CADENA:cad                           {: RESULT = parr + " " + cad; :};
 
 variables ::= VARIABLE IGUAL operacion
             | VARIABLE IGUAL operacion SUMA variables
