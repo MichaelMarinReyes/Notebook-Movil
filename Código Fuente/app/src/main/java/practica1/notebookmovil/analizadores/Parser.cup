@@ -26,7 +26,7 @@ parser code {:
 :}
 
 terminal CADENA, NUMERO, SUMA, RESTA, MULTIPLICACION, DIVISION, PARENTESIS_ABRE, PARENTESIS_CIERRA, POTENCIA, IGUAL;
-terminal HEADER1, HEADER2, HEADER3, HEADER4, HEADER5, HEADER6, TEXT_NEGRITA, TEXT_NEGRITA_ITALICA, SALTO_LINEA, COMILLAS, COMA, VARIABLE, PRINT, FORMAT, PLOT;
+terminal HEADER1, HEADER2, HEADER3, HEADER4, HEADER5, HEADER6, TEXT_NEGRITA, TEXT_NEGRITA_ITALICA, COMILLAS, COMA, VARIABLE, PRINT, FORMAT, PLOT;
 
 non terminal inicial, operacion, header, textos, parrafos, variables, impresion, format, ploteo;
 
@@ -80,8 +80,8 @@ textos ::= MULTIPLICACION parrafos:cad MULTIPLICACION             {: RESULT = ca
          | TEXT_NEGRITA_ITALICA parrafos:cad TEXT_NEGRITA_ITALICA {: RESULT = cad; :};
 
 parrafos ::= CADENA: cad                                          {: RESULT = cad; :}
-           | parrafos:parr CADENA:cad                             {: RESULT = parr + " " + cad; :};
-           //| parrafos:parr NUMERO:num                             {: RESULT = parr + " " + num; :}*;
+           | parrafos:parr CADENA:cad                             {: RESULT = parr + " " + cad; :}
+           | parrafos:parr NUMERO:num                             {: RESULT = String.valueOf(parr + " " + num); :};
 
 variables ::= VARIABLE IGUAL operacion
             | VARIABLE IGUAL operacion SUMA variables
