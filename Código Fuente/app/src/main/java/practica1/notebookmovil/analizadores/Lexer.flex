@@ -41,6 +41,9 @@ import practica1.notebookmovil.analizadores.Token;
 "#"               { return new Symbol(ParserSym.HEADER1, yyline+1, yycolumn+1, yytext()); }
 "##"              { return new Symbol(ParserSym.HEADER2, yyline+1, yycolumn+1, yytext()); }
 "###"             { return new Symbol(ParserSym.HEADER3, yyline+1, yycolumn+1, yytext()); }
+"####"            { return new Symbol(ParserSym.HEADER4, yyline+1, yycolumn+1, yytext()); }
+"#####"           { return new Symbol(ParserSym.HEADER5, yyline+1, yycolumn+1, yytext()); }
+"######"          { return new Symbol(ParserSym.HEADER6, yyline+1, yycolumn+1, yytext()); }
 "**"              { return new Symbol(ParserSym.TEXT_NEGRITA, yyline+1, yycolumn+1, yytext()); }
 "***"             { return new Symbol(ParserSym.TEXT_NEGRITA_ITALICA, yyline+1, yycolumn+1, yytext()); }
 \"                { return new Symbol(ParserSym.COMILLAS, yyline+1, yycolumn+1, yytext()); }

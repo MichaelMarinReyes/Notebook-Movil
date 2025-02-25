@@ -3,10 +3,12 @@ package practica1.notebookmovil
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -29,11 +31,12 @@ class MainActivity : ComponentActivity() {
         val entradaTexto = findViewById<EditText>(R.id.entradaTextoTextEdit)
         val compilarBtn = findViewById<Button>(R.id.compilarBoton)
         val contenedorResultados = findViewById<ViewGroup>(R.id.contenedorResultados)
+        val scrollView = findViewById<ScrollView>(R.id.scrollView)
 
         compilarBtn.setOnClickListener {
             val textoIngresado = entradaTexto.text.toString().trim()
             if (textoIngresado.isNotEmpty()) {
-                agregarExpresion(this, textoIngresado, contenedorResultados)
+                agregarExpresion(this, textoIngresado, contenedorResultados, scrollView)
                 entradaTexto.text.clear()
             }
             if (textoIngresado.isEmpty()) {
@@ -44,7 +47,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private fun agregarExpresion(context: Context, textoIngresado: String, contenedorResultados: ViewGroup) {
+private fun agregarExpresion(context: Context, textoIngresado: String, contenedorResultados: ViewGroup, scrollView: ScrollView) {
     val nuevaVista = LinearLayout(context).apply {
         orientation = LinearLayout.VERTICAL
         layoutParams = LinearLayout.LayoutParams(
@@ -60,15 +63,18 @@ private fun agregarExpresion(context: Context, textoIngresado: String, contenedo
     }
 
     try {
-        val lexer: Lexer = Lexer(StringReader(textoIngresado))
-        val parser: Parser = Parser(lexer)
+        val lexer = Lexer(StringReader(textoIngresado))
+        val parser = Parser(lexer)
         parser.parse()
         Log.d("DEBUG", "Fin de parseo")
 
+        val resultadoTexto = parser.getTexto()
+
         val textResult = TextView(context).apply {
-            text = "✅ Resultado: ${parser.getTexto()}"
-            textSize = 16f
+            text = "✅ $resultadoTexto"
             setTextColor(context.getColor(android.R.color.holo_green_dark))
+            textSize = obtenerTamañoTexto(textoIngresado)
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
         }
 
         nuevaVista.addView(textExpression)
@@ -86,6 +92,22 @@ private fun agregarExpresion(context: Context, textoIngresado: String, contenedo
     }
 
     contenedorResultados.addView(nuevaVista)
+
+    scrollView.post {
+        scrollView.fullScroll(View.FOCUS_DOWN)
+    }
+}
+
+private fun obtenerTamañoTexto(texto: String): Float {
+    return when {
+        texto.startsWith("#######") -> 19f
+        texto.startsWith("#####") -> 20f
+        texto.startsWith("####") -> 22f
+        texto.startsWith("###") -> 24f
+        texto.startsWith("##") -> 26f
+        texto.startsWith("#") -> 28f
+        else -> 16f
+    }
 }
 
 @Composable

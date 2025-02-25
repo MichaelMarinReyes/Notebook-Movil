@@ -26,7 +26,7 @@ parser code {:
 :}
 
 terminal CADENA, NUMERO, SUMA, RESTA, MULTIPLICACION, DIVISION, PARENTESIS_ABRE, PARENTESIS_CIERRA, POTENCIA, IGUAL;
-terminal HEADER1, HEADER2, HEADER3, TEXT_NEGRITA, TEXT_NEGRITA_ITALICA, SALTO_LINEA, COMILLAS, COMA, VARIABLE, PRINT, FORMAT, PLOT;
+terminal HEADER1, HEADER2, HEADER3, HEADER4, HEADER5, HEADER6, TEXT_NEGRITA, TEXT_NEGRITA_ITALICA, SALTO_LINEA, COMILLAS, COMA, VARIABLE, PRINT, FORMAT, PLOT;
 
 non terminal inicial, operacion, header, textos, parrafos, variables, impresion, format, ploteo;
 
@@ -38,7 +38,7 @@ precedence left CADENA;
 
 start with inicial;
 
-inicial ::= operacion:op        {: texto = String.valueOf(op); :}
+inicial ::= operacion:op        {: texto = "Resultado: " + String.valueOf(op); :}
             | header:hed        {: texto = String.valueOf(hed); :}
             | textos:txt        {: texto = String.valueOf(txt); :}
             | parrafos:parr     {: texto = String.valueOf(parr); :}
@@ -68,16 +68,20 @@ impresion ::= PRINT PARENTESIS_ABRE COMILLAS parrafos:parr COMILLAS PARENTESIS_C
 
 
 //GRAMÁTICAS PARA MARKDOWN
-header ::= HEADER1 CADENA:head {: System.out.println(head); RESULT = head; :}
-         | HEADER2 CADENA:head {: System.out.println(head); RESULT = head; :}
-         | HEADER3 CADENA:head {: System.out.println(head); RESULT = head; :};
+header ::= HEADER1 parrafos:head                                  {: RESULT = head; :}
+         | HEADER2 parrafos:head                                  {: RESULT = head; :}
+         | HEADER3 parrafos:head                                  {: RESULT = head; :}
+         | HEADER4 parrafos:head                                  {: RESULT = head; :}
+         | HEADER5 parrafos:head                                  {: RESULT = head; :}
+         | HEADER6 parrafos:head                                  {: RESULT = head; :};
 
-textos ::= MULTIPLICACION CADENA MULTIPLICACION
-         | TEXT_NEGRITA CADENA TEXT_NEGRITA
-         | TEXT_NEGRITA_ITALICA CADENA TEXT_NEGRITA_ITALICA;
+textos ::= MULTIPLICACION parrafos:cad MULTIPLICACION             {: RESULT = cad; :}
+         | TEXT_NEGRITA parrafos:cad TEXT_NEGRITA                 {: RESULT = cad; :}
+         | TEXT_NEGRITA_ITALICA parrafos:cad TEXT_NEGRITA_ITALICA {: RESULT = cad; :};
 
-parrafos ::= CADENA: cad                                        {: RESULT = cad; :}
-           | parrafos:parr CADENA:cad                           {: RESULT = parr + " " + cad; :};
+parrafos ::= CADENA: cad                                          {: RESULT = cad; :}
+           | parrafos:parr CADENA:cad                             {: RESULT = parr + " " + cad; :};
+           //| parrafos:parr NUMERO:num                             {: RESULT = parr + " " + num; :}*;
 
 variables ::= VARIABLE IGUAL operacion
             | VARIABLE IGUAL operacion SUMA variables

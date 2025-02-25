@@ -4,43 +4,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="NOTEBOOK"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="28dp"
+        android:paddingBottom="8dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- ScrollView para mostrar varias expresiones -->
+        <!-- ScrollView para que todo el contenido sea desplazable -->
         <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:fillViewport="true">
+            android:fillViewport="true"
+            android:descendantFocusability="beforeDescendants">
 
             <LinearLayout
-                android:id="@+id/contenedorResultados"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/contenedorResultados"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="8dp"/>
+
+                <EditText
+                    android:id="@+id/entradaTextoTextEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ingrese una expresión"
+                    android:textSize="16sp"
+                    android:background="@android:drawable/edit_text"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
 
         </ScrollView>
 
-        <!-- Entrada de texto -->
-        <EditText
-            android:id="@+id/entradaTextoTextEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ingrese una expresión"
-            android:textSize="16sp"
-            android:background="@android:drawable/edit_text"/>
-
-        <!-- Botón en la parte inferior -->
         <Button
             android:id="@+id/compilarBoton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@android:color/holo_red_dark"
             android:text="Ejecutar"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:layout_marginTop="8dp"/>
     </LinearLayout>
 </LinearLayout>
