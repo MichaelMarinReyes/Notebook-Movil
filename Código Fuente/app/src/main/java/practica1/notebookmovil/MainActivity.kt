@@ -74,7 +74,7 @@ private fun agregarExpresion(context: Context, textoIngresado: String, contenedo
             text = "✅ $resultadoTexto"
             setTextColor(context.getColor(android.R.color.holo_green_dark))
             textSize = obtenerTamañoTexto(textoIngresado)
-            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setTypeface(typeface, obtenerTipoTexto(textoIngresado))
         }
 
         nuevaVista.addView(textExpression)
@@ -107,6 +107,14 @@ private fun obtenerTamañoTexto(texto: String): Float {
         texto.startsWith("##") -> 26f
         texto.startsWith("#") -> 28f
         else -> 16f
+    }
+}
+
+private fun obtenerTipoTexto(texto: String): Int {
+    return when {
+        texto.startsWith("***") -> android.graphics.Typeface.BOLD_ITALIC
+        texto.startsWith("*") -> android.graphics.Typeface.ITALIC
+        else -> android.graphics.Typeface.NORMAL
     }
 }
 
