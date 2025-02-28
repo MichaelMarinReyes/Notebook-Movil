@@ -9,7 +9,9 @@ package practica1.notebookmovil.analizadores;
 public class ParserSym {
   /* terminals */
   public static final int PLOT = 25;
+  public static final int PUNTO = 28;
   public static final int MULTIPLICACION = 6;
+  public static final int REPORTE = 26;
   public static final int CADENA = 2;
   public static final int IGUAL = 11;
   public static final int DIVISION = 7;
@@ -27,12 +29,14 @@ public class ParserSym {
   public static final int HEADER2 = 13;
   public static final int HEADER1 = 12;
   public static final int COMA = 21;
+  public static final int OPERADORES = 27;
   public static final int EOF = 0;
   public static final int PRINT = 23;
   public static final int error = 1;
   public static final int NUMERO = 3;
   public static final int FORMAT = 24;
   public static final int TEXT_NEGRITA = 18;
+  public static final int ERRORES = 29;
   public static final int RESTA = 5;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -60,7 +64,11 @@ public class ParserSym {
   "VARIABLE",
   "PRINT",
   "FORMAT",
-  "PLOT"
+  "PLOT",
+  "REPORTE",
+  "OPERADORES",
+  "PUNTO",
+  "ERRORES"
   };
 }
 

@@ -2,18 +2,30 @@ package practica1.notebookmovil.analizadores;
 
 import java_cup.runtime.*;
 import java.util.ArrayList;
+import practica1.notebookmovil.reportes.OcurrenciaOperacion;
+import practica1.notebookmovil.reportes.ReporteGeneral;
 
 parser code {:
     public String texto = " ";
+    public static ArrayList<OcurrenciaOperacion> reportesOcurrencias = new ArrayList<>();
+    public static ArrayList<ReporteGeneral> reportesGenerales = new ArrayList<>();
 
     public String getTexto() {
         return texto;
     }
 
+    public ArrayList<ReporteGeneral> getReportesGenerales() {
+        return reportesGenerales;
+    }
+
+    public ArrayList<OcurrenciaOperacion> getReporteOcurrencia() {
+        return reportesOcurrencias;
+    }
+
     public void report_error(String message, Object info) {
         if (info instanceof Symbol) {
             Symbol s = (Symbol) info;
-            System.err.println("Error sintáctico en línea " + (s.left + 1) + ", columna " + (s.right + 1) + ": " + message);
+            System.err.println("Error sintáctico en línea " + (s.left) + ", columna " + (s.right) + ": " + message);
         } else {
             System.err.println("Error sintáctico: " + message);
         }
@@ -21,14 +33,18 @@ parser code {:
 
     public void report_fatal_error(String message, Object info) throws Exception {
         report_error(message, info);
+        Symbol symbol = (Symbol)info;
+        System.out.println("metodo report_fatal_error " + (symbol.left) +" " + (symbol.right) + " message: " + message);
         throw new Exception("Error sintáctico irrecuperable.");
+
     }
 :}
 
 terminal CADENA, NUMERO, SUMA, RESTA, MULTIPLICACION, DIVISION, PARENTESIS_ABRE, PARENTESIS_CIERRA, POTENCIA, IGUAL;
 terminal HEADER1, HEADER2, HEADER3, HEADER4, HEADER5, HEADER6, TEXT_NEGRITA, TEXT_NEGRITA_ITALICA, COMILLAS, COMA, VARIABLE, PRINT, FORMAT, PLOT;
+terminal REPORTE, OPERADORES, PUNTO, ERRORES;
 
-non terminal inicial, operacion, header, textos, parrafos, variables, impresion, format, ploteo, operador;
+non terminal inicial, operacion, header, textos, parrafos, variables, impresion, format, ploteo, operador, reportes;
 
 precedence left SUMA, RESTA;
 precedence left MULTIPLICACION, DIVISION;
@@ -38,23 +54,30 @@ precedence left CADENA;
 
 start with inicial;
 
-inicial ::= operacion:op        {: texto = "Resultado: " + String.valueOf(op); :}
-            | header:hed        {: texto = String.valueOf(hed); :}
-            | textos:txt        {: texto = String.valueOf(txt); :}
-            | parrafos:parr     {: texto = String.valueOf(parr); :}
-            | variables: var    {: texto = String.valueOf(var); :}
-            | impresion:imp     {: texto = String.valueOf(imp); :}
-            | format:form       {: texto = String.valueOf(form); :}
-            | ploteo:plot       {: texto = String.valueOf(plot); :};
+inicial ::= operacion:op                                      {: texto = "Resultado: " + String.valueOf(op); :}
+            | header:hed                                      {: texto = String.valueOf(hed); :}
+            | textos:txt                                      {: texto = String.valueOf(txt); :}
+            | parrafos:parr                                   {: texto = String.valueOf(parr); :}
+            | variables: var                                  {: texto = String.valueOf(var); :}
+            | impresion:imp                                   {: texto = String.valueOf(imp); :}
+            | format:form                                     {: texto = String.valueOf(form); :}
+            | ploteo:plot                                     {: texto = String.valueOf(plot); :}
+            | reportes:rep                                    {: System.out.println("DEVOLUCION DE REPORTES"+rep);
+            texto = String.valueOf(rep); :};
 
-operacion ::= operacion:e1 SUMA operacion:e2                  {: RESULT = ((Number)e1).doubleValue() + ((Number)e2).doubleValue(); :}
-            | operacion:e1 RESTA operacion:e2                 {: RESULT = ((Number)e1).doubleValue() - ((Number)e2).doubleValue(); :}
-            | operacion:e1 MULTIPLICACION operacion:e2        {: RESULT = ((Number)e1).doubleValue() * ((Number)e2).doubleValue(); :}
-            | operacion:e1 DIVISION operacion:e2              {: if (((Number)e2).doubleValue() == 0) {
+operacion ::= operacion:e1 SUMA:s operacion:e2                  {: reportesOcurrencias.add(new OcurrenciaOperacion("Suma", "0", String.valueOf(e1) + " + " + String.valueOf(e2)));
+                                                                 RESULT = ((Number)e1).doubleValue() + ((Number)e2).doubleValue(); :}
+            | operacion:e1 RESTA:s operacion:e2                 {: reportesOcurrencias.add(new OcurrenciaOperacion("Resta", "0", String.valueOf(e1) + " - " + String.valueOf(e2)));
+                                                                 RESULT = ((Number)e1).doubleValue() - ((Number)e2).doubleValue(); :}
+            | operacion:e1 MULTIPLICACION:s operacion:e2        {: reportesOcurrencias.add(new OcurrenciaOperacion("Multiplicación", "0", String.valueOf(e1) + " * " + String.valueOf(e2)));
+                                                                 RESULT = ((Number)e1).doubleValue() * ((Number)e2).doubleValue(); :}
+            | operacion:e1 DIVISION:s operacion:e2              {: if (((Number)e2).doubleValue() == 0) {
                                                                         throw new ArithmeticException("División por cero");
                                                                  }
+                                                                 reportesOcurrencias.add(new OcurrenciaOperacion("División", "0", String.valueOf(e1) + " / " + String.valueOf(e2)));
                                                                  RESULT = ((Number)e1).doubleValue() / ((Number)e2).doubleValue(); :}
-            | operacion:e1 POTENCIA operacion:e2              {: RESULT = Math.pow(((Number)e1).doubleValue(), ((Number)e2).doubleValue()); :}
+            | operacion:e1 POTENCIA:s operacion:e2              {: reportesOcurrencias.add(new OcurrenciaOperacion("Potencia", "0", String.valueOf(e1) + " ^ " + String.valueOf(e2)));
+                                                                 RESULT = Math.pow(((Number)e1).doubleValue(), ((Number)e2).doubleValue()); :}
             | PARENTESIS_ABRE operacion:e PARENTESIS_CIERRA   {: RESULT = ((Number)e).doubleValue(); :}
             | NUMERO:n                                        {: RESULT = ((Number)n).doubleValue(); :}/**
             | error:err                                       {: report_error("Error al ingresar", err); RESULT = 0.0; :}*/;
@@ -97,3 +120,6 @@ variables ::= VARIABLE IGUAL operacion
 format ::= FORMAT PARENTESIS_ABRE operacion PARENTESIS_CIERRA;
 
 ploteo ::= PLOT PARENTESIS_ABRE operacion COMA NUMERO COMA NUMERO PARENTESIS_CIERRA;
+
+reportes ::= REPORTE PUNTO OPERADORES PARENTESIS_ABRE PARENTESIS_CIERRA                   {: System.out.println("ocurrencias"); :}
+           | REPORTE PUNTO ERRORES PARENTESIS_ABRE PARENTESIS_CIERRA                      {: System.out.println("errores generales"); :};

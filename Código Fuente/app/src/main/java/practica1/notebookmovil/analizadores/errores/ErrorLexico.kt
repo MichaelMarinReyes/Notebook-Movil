@@ -1,4 +1,4 @@
-package practica1.notebookmovil.analizadores
+package practica1.notebookmovil.analizadores.errores
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -30,12 +30,12 @@ class ErrorLexico  (
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<practica1.notebookmovil.analizadores.ErrorLexico> {
-        override fun createFromParcel(parcel: Parcel): practica1.notebookmovil.analizadores.ErrorLexico {
-            return practica1.notebookmovil.analizadores.ErrorLexico(parcel)
+    companion object CREATOR : Parcelable.Creator<ErrorLexico> {
+        override fun createFromParcel(parcel: Parcel): ErrorLexico {
+            return ErrorLexico(parcel)
         }
 
-        override fun newArray(size: Int): Array<practica1.notebookmovil.analizadores.ErrorLexico?> {
+        override fun newArray(size: Int): Array<ErrorLexico?> {
             return arrayOfNulls(size)
         }
     }
