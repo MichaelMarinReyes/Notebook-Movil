@@ -24,14 +24,15 @@ import practica1.notebookmovil.analizadores.errores.ErrorLexico;
 
 [ \t\n\r\f]       { /* Ignorar espacios en blanco */ }
 
-"format"          { return new Symbol(ParserSym.FORMAT, yyline+1, yycolumn+1, yytext()); }
-"plot"            { return new Symbol(ParserSym.PLOT, yyline+1, yycolumn+1, yytext()); }
-"print"           { return new Symbol(ParserSym.PRINT, yyline+1, yycolumn+1, yytext()); }
 "reporte"         { return new Symbol(ParserSym.REPORTE, yyline+1, yycolumn+1,yytext()); }
 "operadores"      { return new Symbol(ParserSym.OPERADORES, yyline+1, yycolumn+1, yytext()); }
 "errores"         { return new Symbol(ParserSym.ERRORES, yyline+1, yycolumn+1, yytext()); }
+"format"          { return new Symbol(ParserSym.FORMAT, yyline+1, yycolumn+1, yytext()); }
+"plot"            { return new Symbol(ParserSym.PLOT, yyline+1, yycolumn+1, yytext()); }
+"print"           { return new Symbol(ParserSym.PRINT, yyline+1, yycolumn+1, yytext()); }
 [0-9]+\.[0-9]+    { return new Symbol(ParserSym.NUMERO, yyline+1, yycolumn+1, Double.parseDouble(yytext())); }
 [0-9]+            { return new Symbol(ParserSym.NUMERO, yyline+1, yycolumn+1, Double.parseDouble(yytext())); }
+"."               { return new Symbol(ParserSym.PUNTO, yyline+1, yycolumn+1, yytext()); }
 "+"               { return new Symbol(ParserSym.SUMA, yyline+1, yycolumn+1, yytext()); }
 "-"               { return new Symbol(ParserSym.RESTA, yyline+1, yycolumn+1, yytext()); }
 "*"               { return new Symbol(ParserSym.MULTIPLICACION, yyline+1, yycolumn+1, yytext()); }
@@ -50,7 +51,6 @@ import practica1.notebookmovil.analizadores.errores.ErrorLexico;
 "***"             { return new Symbol(ParserSym.TEXT_NEGRITA_ITALICA, yyline+1, yycolumn+1, yytext()); }
 \"                { return new Symbol(ParserSym.COMILLAS, yyline+1, yycolumn+1, yytext()); }
 ","               { return new Symbol(ParserSym.COMA, yyline+1, yycolumn+1, yytext()); }
-"."               { return new Symbol(ParserSym.PUNTO, yyline+1, yycolumn+1, yytext()); }
 [0-9a-zA-Z]+      { return new Symbol(ParserSym.CADENA, yyline+1, yycolumn+1, yytext()); }
 [a-zA-Z_][a-zA-Z0-9_]* { return new Symbol(ParserSym.VARIABLE, yyline+1, yycolumn+1, yytext()); }
 <<EOF>>           { return new Symbol(ParserSym.EOF); }

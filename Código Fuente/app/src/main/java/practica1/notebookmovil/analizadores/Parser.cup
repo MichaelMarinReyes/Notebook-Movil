@@ -25,7 +25,11 @@ parser code {:
     public void report_error(String message, Object info) {
         if (info instanceof Symbol) {
             Symbol s = (Symbol) info;
-            System.err.println("Error sintáctico en línea " + (s.left) + ", columna " + (s.right) + ": " + message);
+            try {
+                throw new Exception("Error sintáctico en la columna " + (s.right) + ": " + message);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         } else {
             System.err.println("Error sintáctico: " + message);
         }
@@ -34,8 +38,7 @@ parser code {:
     public void report_fatal_error(String message, Object info) throws Exception {
         report_error(message, info);
         Symbol symbol = (Symbol)info;
-        System.out.println("metodo report_fatal_error " + (symbol.left) +" " + (symbol.right) + " message: " + message);
-        throw new Exception("Error sintáctico irrecuperable.");
+        throw new Exception("El texto ingresado es incorrecto, por favor revise la sintaxis y vuelva a intentarlo.");
 
     }
 :}
@@ -62,8 +65,7 @@ inicial ::= operacion:op                                      {: texto = "Result
             | impresion:imp                                   {: texto = String.valueOf(imp); :}
             | format:form                                     {: texto = String.valueOf(form); :}
             | ploteo:plot                                     {: texto = String.valueOf(plot); :}
-            | reportes:rep                                    {: System.out.println("DEVOLUCION DE REPORTES"+rep);
-            texto = String.valueOf(rep); :};
+            | reportes:rep                                    {: texto = String.valueOf(rep); :};
 
 operacion ::= operacion:e1 SUMA:s operacion:e2                  {: reportesOcurrencias.add(new OcurrenciaOperacion("Suma", "0", String.valueOf(e1) + " + " + String.valueOf(e2)));
                                                                  RESULT = ((Number)e1).doubleValue() + ((Number)e2).doubleValue(); :}
@@ -72,7 +74,7 @@ operacion ::= operacion:e1 SUMA:s operacion:e2                  {: reportesOcurr
             | operacion:e1 MULTIPLICACION:s operacion:e2        {: reportesOcurrencias.add(new OcurrenciaOperacion("Multiplicación", "0", String.valueOf(e1) + " * " + String.valueOf(e2)));
                                                                  RESULT = ((Number)e1).doubleValue() * ((Number)e2).doubleValue(); :}
             | operacion:e1 DIVISION:s operacion:e2              {: if (((Number)e2).doubleValue() == 0) {
-                                                                        throw new ArithmeticException("División por cero");
+                                                                        report_error("División por cero", e2);
                                                                  }
                                                                  reportesOcurrencias.add(new OcurrenciaOperacion("División", "0", String.valueOf(e1) + " / " + String.valueOf(e2)));
                                                                  RESULT = ((Number)e1).doubleValue() / ((Number)e2).doubleValue(); :}
@@ -121,5 +123,6 @@ format ::= FORMAT PARENTESIS_ABRE operacion PARENTESIS_CIERRA;
 
 ploteo ::= PLOT PARENTESIS_ABRE operacion COMA NUMERO COMA NUMERO PARENTESIS_CIERRA;
 
-reportes ::= REPORTE PUNTO OPERADORES PARENTESIS_ABRE PARENTESIS_CIERRA                   {: System.out.println("ocurrencias"); :}
-           | REPORTE PUNTO ERRORES PARENTESIS_ABRE PARENTESIS_CIERRA                      {: System.out.println("errores generales"); :};
+reportes ::= REPORTE PUNTO OPERADORES:ocur PARENTESIS_ABRE PARENTESIS_CIERRA                      {: RESULT = ocur; :}
+           | REPORTE PUNTO ERRORES:errores PARENTESIS_ABRE PARENTESIS_CIERRA                      {: RESULT = errores; :}
+           | error:er                                                                             {: report_error("Se esperaba \"reporte.operadores()\" o \"reporte.errores()\"", er); :};

@@ -70,10 +70,8 @@ private fun agregarExpresion(context: Context, textoIngresado: String, contenedo
         val parser = Parser(lexer)
         parser.parse()
         Log.d("DEBUG", "Fin de parseo")
-        Log.d("INFO", textoIngresado)
         val resultadoTexto = parser.getTexto()
-        Log.d("INFO", resultadoTexto)
-        if (textoIngresado == "ocurrencia") {
+        if (textoIngresado == "operadores") {
             reporteOcurrencias(context, contenedorResultados, parser.reporteOcurrencia)
         } else {
             val textResult = TextView(context).apply {
