@@ -78,9 +78,9 @@ operacion ::= operacion:e1 SUMA:s operacion:e2                  {: reportesOcurr
                                                                  RESULT = ((Number)e1).doubleValue() / ((Number)e2).doubleValue(); :}
             | operacion:e1 POTENCIA:s operacion:e2              {: reportesOcurrencias.add(new OcurrenciaOperacion("Potencia", "0", String.valueOf(e1) + " ^ " + String.valueOf(e2)));
                                                                  RESULT = Math.pow(((Number)e1).doubleValue(), ((Number)e2).doubleValue()); :}
-            | PARENTESIS_ABRE operacion:e PARENTESIS_CIERRA   {: RESULT = ((Number)e).doubleValue(); :}
-            | NUMERO:n                                        {: RESULT = ((Number)n).doubleValue(); :}/**
-            | error:err                                       {: report_error("Error al ingresar", err); RESULT = 0.0; :}*/;
+            | PARENTESIS_ABRE operacion:e PARENTESIS_CIERRA     {: RESULT = ((Number)e).doubleValue(); :}
+            | NUMERO:n                                          {: RESULT = ((Number)n).doubleValue(); :}/**
+            | error:err                                         {: report_error("Error al ingresar", err); RESULT = 0.0; :}*/;
 
 operador ::= SUMA                       {: RESULT = "+"; :}
            | RESTA                      {: RESULT = "-"; :}

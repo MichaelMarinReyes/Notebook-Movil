@@ -1,0 +1,181 @@
+@startuml Notebook
+
+package kotlin+java {
+    package analizadores {
+        package errores {
+            class ErrorLexico {
+                - tipo: String
+                - linea: Int
+                - columna: Int
+                - lexema: String
+                - descripcion: String
+                + ErrorLexico(tipo: String, linea: Int, columna: Int, lexema: String, descripcion: String)
+                + getTipo(): String
+                + getLinea(): Int
+                + getColumna(): Int
+                + getLexema(): String
+                + getDescripcion(): String
+                + setTipo(tipo: String): void
+                + setLinea(linea: Int): void
+                + setColumna(columna: Int): void
+                + setLexema(lexema: String): void
+                + setDescripcion(descripcion: String): void
+            }
+
+            class ErrorSintactico {
+                - tipo: String
+                - linea: Int
+                - columna: Int
+                - lexema: String
+                - descripcion: String
+                + ErrorSintactico(tipo: String, linea: Int, columna: Int, lexema: String, descripcion: String)
+                + getTipo(): String
+                + getLinea(): Int
+                + getColumna(): Int
+                + getLexema(): String
+                + getDescripcion(): String
+                + setTipo(tipo: String): void
+                + setLinea(linea: Int): void
+                + setColumna(columna: Int): void
+                + setLexema(lexema: String): void
+                + setDescripcion(descripcion: String): void
+            }
+        }
+
+        class Lexer {
+            + Lexer(entrada: Reader)
+        }
+
+        class Parser {
+            - texto: String
+            - reportesOcurrencias: ArrayList<OcurrenciaOperacion>
+            - reportesGenerales: ArrayList<ReporteGeneral>
+            + getTexto(): String
+            + getReportesOcurrencias(): ArrayList<OcurrenciaOperacion>
+            + getReportesGenerales(): ArrayList<ReporteGeneral>
+            + report_error(message: String, info: Object): void
+            + report_fatal_error(message: String, info: Object): void
+            + parse(): Symbol
+
+        }
+
+        class ParserSym {
+            + static final int PLOT
+            + static final int PUNTO
+            + static final int MULTIPLICACION
+            + static final int REPORT
+            + static final int CADENA
+            + static final int IGUAL
+            + static final int DIVISION
+            + static final int SUMA
+            + static final int PARENTESIS_ABRE
+            + static final int TEXT_NEGRITA_ITALICA
+            + static final int POTENCIA
+            + static final int PARENTESIS_CIERRA
+            + static final int HEADER6
+            + static final int VARIABLE
+            + static final int HEADER5
+            + static final int HEADER4
+            + static final int HEADER3
+            + static final int COMILLAS
+            + static final int HEADER2
+            + static final int HEADER1
+            + static final int COMA
+            + static final int OPERADORES
+            + static final int EOF
+            + static final int PRINT
+            + static final int error
+            + static final int NUMERO
+            + static final int FORMAT
+            + static final int TEXT_NEGRITA
+            + static final int ERRORES
+            + static final int RESTA
+            + static final String[] terminalNames 
+        }
+
+        class Token {
+            - tipo: String
+            - linea: Int
+            - columna: Int
+            - lexema: String
+            + Token(tipo: String, linea: Int, columna: Int, lexema, String)
+            + getTipo(): String
+            + getLinea(): Int
+            + getColumna(): Int
+            + getLexema(): String
+            + setTipo(tipo: String): void
+            + setLinea(linea: Int): void
+            + setColumna(columna: Ing): void
+            + setLexema(lexema: String): void
+        }
+
+    }
+
+    package reportes {
+        class OcurrenciaOperacion {
+            - tipoOperacion: String
+            - columna: String
+            - ocurrencia: String
+            + OcurrenciaOperacion(tipoOperacion: String, columna: String, ocurrencia:String)
+            + getTipoOperacion(): String
+            + getColumna(): String
+            + getOcurrencia(): String
+            + setTipoOperacion(tipoOperacion: String): void
+            + setColumna(columna: String): void
+            + setOcurrencia(ocurrencia: String): void
+        }
+
+        class ReporteGeneral {
+            - caracter: String
+            - columna: String
+            - tipo: String
+            - descripcion: String
+            + ReporteGeneral(caracter: String, columna: String, tipo: String, descripcion: String)
+            + getCaracter(): String
+            + getColumna(): String
+            + getTipo(): String
+            + getDescripcion: String
+            + setCaracter(caracter: String): void
+            + setColumna(columna: String): void
+            + setTipo(tipo: String): void
+            + setDescripcion(descripcion: String): void
+        }
+    }
+
+    class MainActivity {
+        + onCreate(savedInstanceState: Bundle): override
+        + obtenerTamañoTexto(texto: String): Float
+        + obtenerTipoTexto(texto: String): Int
+        + reporteOcurrencias(): void
+        + agregarExpresion(): void
+    }
+
+}
+
+package res {
+    package layout {
+        class vista_principal {
+            + linearLayout: LinearLayout
+            + textView: TextView
+            + scrollView: ScrollView
+            + editText: EditText
+            + button: BoundaryStereotypeFontName
+        }
+    }
+}
+
+Lexer *-- Token
+Lexer *-- ParserSym
+Parser *-- Lexer
+Parser *-- Token
+Parser --o OcurrenciaOperacion
+Parser --o ReporteGeneral
+ErrorLexico o-- Token
+ErrorSintactico o-- Token
+MainActivity *-- Parser
+MainActivity *-- vista_principal
+vista_principal *-- EditText
+vista_principal *-- Button
+vista_principal *-- ScrollView
+vista_principal *-- TextView
+@enduml
